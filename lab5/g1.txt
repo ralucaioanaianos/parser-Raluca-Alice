@@ -1,0 +1,7 @@
+N : S A B
+E : a b
+S : S
+P :
+    S -> a A | a A b B
+    A -> a A | B
+    B -> b B | epsilon

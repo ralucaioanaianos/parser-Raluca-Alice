@@ -1,0 +1,32 @@
+N : program compound_statement statement_list statement simple_statement struct_statement assign_statement io_statement read_statement write_statement if_statement for_statement while_statement condition_statement expression arithmetic1 arithmetic2 multiply1 multiply2 id declaration type simple_type array_declaration condition indexed_identifier RELATION LOGICAL
+E : START { } ; IDENTIFIER = ( ) read write if else for while + - * / CONSTANT epsilon int string char list < > [ ] <= >= != == && ||
+S : program
+P :
+    program -> START compound_statement
+    compound_statement -> { statement_list }
+    statement_list -> statement | statement ; statement_list
+    statement -> simple_statement | struct_statement
+    simple_statement -> assign_statement | io_statement | declaration
+    struct_statement -> compound_statement | if_statement | while_statement | for_statement
+    assign_statement -> IDENTIFIER = expression | indexed_identifier = expression ;
+    io_statement -> read_statement | write_statement
+    read_statement -> read ( IDENTIFIER ) ; | read ( indexed_identifier ) ;
+    write_statement -> write ( id ) ;
+    if_statement -> if ( condition_statement ) compound_statement else compound_statement
+    for_statement -> for ( int assign_statement ; condition ; assign_statement ) compound_statement
+    while_statement -> while ( condition_statement ) compound_statement
+    condition_statement -> condition | condition LOGICAL condition
+    expression -> arithmetic2 arithmetic1
+    arithmetic1 -> + arithmetic2 arithmetic1 | - arithmetic2 arithmetic1 | epsilon
+    arithmetic2 -> multiply2 multiply1
+    multiply1 -> * multiply2 multiply1 | / multiply2 multiply1 | epsilon
+    multiply2 -> ( expression ) | IDENTIFIER | CONSTANT
+    id -> IDENTIFIER | CONSTANT | indexed_identifier
+    declaration -> type IDENTIFIER ;
+    type -> simple_type | array_declaration
+    simple_type -> int | string | char
+    array_declaration -> list < simple_type >
+    condition -> expression RELATION expression
+    indexed_identifier -> IDENTIFIER [ int ]
+    RELATION -> < | <= | == | != | >= | >
+    LOGICAL -> && | ||
