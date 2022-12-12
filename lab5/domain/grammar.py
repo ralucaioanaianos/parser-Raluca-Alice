@@ -2,14 +2,14 @@ class Grammar:
 
     def __init__(self):
         self.N = []  # nonterminals
-        self.E = []  # terminals
+        self.T = []  # terminals
         self.S = ""  # start symbol
-        self.P = {}  # predictions
+        self.P = {}  # productions
 
     def readFromFile(self, file):
         with open(file, "r") as f:
             self.N = f.readline().strip().split(" : ")[1].split(" ")
-            self.E = f.readline().strip().split(" : ")[1].split(" ")
+            self.T = f.readline().strip().split(" : ")[1].split(" ")
             self.S = f.readline().strip().split(" : ")[1]
 
             f.readline()
@@ -25,7 +25,7 @@ class Grammar:
         return self.N
 
     def getTerminals(self):
-        return self.E
+        return self.T
 
     def getProductions(self):
         return self.P
@@ -36,9 +36,12 @@ class Grammar:
         return None
 
     def elementInGrammar(self, element):
-        if not (element in self.N or element == "epsilon" or element in self.E):
+        if not (element in self.N or element == "epsilon" or element in self.T):
             return False
         return True
+
+    def getStartingSymbol(self):
+        return self.S
 
     def CFGCheck(self):
         if self.S not in self.N:
@@ -52,5 +55,43 @@ class Grammar:
                         return False
         return True
 
+    def solveLeftRecursivity(self):
+        auxProductions = {}
+
+        for lhs in self.P.keys():
+            # print(lhs)
+            leftRecursiveProductions = list(filter(lambda p: p[0] == lhs, self.P[lhs]))
+            if len(leftRecursiveProductions) > 0:
+                newProductionsForLHS = []
+                auxNonTerminal = lhs + "Aux"
+                newProductionsForAux = []
+
+                hasBeta = False
+
+                for rhs in self.P[lhs]:
+                    if rhs not in leftRecursiveProductions:
+                        newProductionsForLHS.append(rhs)
+                        newProductionsForLHS[-1].append(auxNonTerminal)
+                        hasBeta = True
+                    else:
+                        newProd = []
+                        for i in range(1, len(rhs)):
+                            newProd.append(rhs[i])
+                        newProd.append(auxNonTerminal)
+                        newProductionsForAux.append(newProd)
+
+                newProductionsForAux.append(["epsilon"])
+
+                if not hasBeta:
+                    raise Exception("Left recursive production without beta!")
+
+                auxProductions[auxNonTerminal] = newProductionsForAux
+                self.N.append(auxNonTerminal)
+                if "epsilon" not in self.T:
+                    self.T.append("epsilon")
+                self.P[lhs] = newProductionsForLHS
+
+        for lhs in auxProductions.keys():
+            self.P[lhs] = auxProductions[lhs]
 
 

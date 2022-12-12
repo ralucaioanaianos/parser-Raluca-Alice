@@ -15,26 +15,30 @@ class UI:
 
     def run(self):
         grammar = Grammar()
-        while True:
-            self.printMenu()
-            command = input("command: ")
-            if command == "0":
-                break
-            elif command == "1":
-                file = input("file: ")
-                if os.path.isfile(file):
-                    grammar.readFromFile(file)
-                else:
-                    print("file does not exist")
-            elif command == "2":
-                print(grammar.getNonterminals())
-            elif command == "3":
-                print(grammar.getTerminals())
-            elif command == "4":
-                print(grammar.getProductions())
-            elif command == "5":
-                nonterminal = input("nonterminal: ")
-                print(grammar.getProductionsFor(nonterminal))
-            elif command == "6":
-                print(grammar.CFGCheck())
+        grammar.readFromFile("g3.txt")
+        grammar.solveLeftRecursivity()
+        print(grammar.getProductions())
+        # while True:
+
+            # self.printMenu()
+            # command = input("command: ")
+            # if command == "0":
+            #     break
+            # elif command == "1":
+            #     file = input("file: ")
+            #     if os.path.isfile(file):
+            #         grammar.readFromFile(file)
+            #     else:
+            #         print("file does not exist")
+            # elif command == "2":
+            #     print(grammar.getNonterminals())
+            # elif command == "3":
+            #     print(grammar.getTerminals())
+            # elif command == "4":
+            #     print(grammar.getProductions())
+            # elif command == "5":
+            #     nonterminal = input("nonterminal: ")
+            #     print(grammar.getProductionsFor(nonterminal))
+            # elif command == "6":
+            #     print(grammar.CFGCheck())
 
