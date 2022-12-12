@@ -1,6 +1,7 @@
 import os
 
 from domain.grammar import Grammar
+from domain.parser import Parser
 
 
 class UI:
@@ -16,8 +17,8 @@ class UI:
     def run(self):
         grammar = Grammar()
         grammar.readFromFile("g3.txt")
-        grammar.solveLeftRecursivity()
-        print(grammar.getProductions())
+        parser = Parser(grammar, "x1 c c s s a")
+        parser.descending_recursive_parsing()
         # while True:
 
             # self.printMenu()
