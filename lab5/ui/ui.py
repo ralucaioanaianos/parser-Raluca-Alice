@@ -18,7 +18,11 @@ class UI:
         grammar = Grammar()
         grammar.readFromFile("g3.txt")
         parser = Parser(grammar, "x1 c c s s a")
+        # grammar.readFromFile("g4.txt")
+        # parser = Parser(grammar, "a b a a b b")
         parser.descending_recursive_parsing()
+        parser_output = parser.get_output_table()
+        parser_output.get_output_as_string()
         # while True:
 
             # self.printMenu()

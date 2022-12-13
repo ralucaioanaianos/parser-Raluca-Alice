@@ -1,0 +1,7 @@
+N : S A B
+E : a b
+S : S
+P :
+    S -> a B | b A
+    A -> a | a S | b A A
+    B -> b | b S | a B B
