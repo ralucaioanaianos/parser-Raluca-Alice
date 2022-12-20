@@ -4,27 +4,30 @@ from domain.Node import Node
 
 
 class TableOutput:
-    def __init__(self, alpha, grammar):
+    def __init__(self, alpha, grammar, output_file_name):
         self.alpha = alpha  # working stack
         self.grammar = grammar
+        self.output_file_name = output_file_name
 
     def get_output_as_string(self):
         productions = list(
             filter(lambda production: production.split(" ")[0] in self.grammar.getNonterminals(), self.alpha))
 
-        first_production = productions[0]
-        first_non_terminal = first_production.split(" ")[0]
-        production_number = int(first_production.split(" ")[1])
-        first_rule = self.grammar.getProductionsFor(first_non_terminal)[production_number]
+        if len(productions) > 0:
+            first_production = productions[0]
+            first_non_terminal = first_production.split(" ")[0]
+            production_number = int(first_production.split(" ")[1])
+            first_rule = self.grammar.getProductionsFor(first_non_terminal)[production_number]
 
-        root = Node(first_non_terminal)
+            root = Node(first_non_terminal)
 
-        root.child = self.build_tree(first_rule, productions)
+            root.child = self.build_tree(first_rule, productions)
 
-        rows = self.bfs(root)
+            rows = self.bfs(root)
 
-        rows.insert(0, ['index', 'info', 'parent', 'right_sibling'])
-        print(tabulate(rows, headers='firstrow', tablefmt='fancy_grid'))
+            rows.insert(0, ['index', 'info', 'parent', 'right_sibling'])
+            f = open(self.output_file_name, "w")
+            f.write(tabulate(rows, headers='firstrow'))
 
     def build_tree(self, rule, productions):
         """
@@ -43,7 +46,7 @@ class TableOutput:
             node = Node(symbol)
             node.right_sibling = self.build_tree(rule[1:], productions)
             return node
-        # if it is a nonterminal then it can habe both a child and a right sibling
+        # if it is a nonterminal then it can have both a child and a right sibling
         elif symbol in self.grammar.getNonterminals():
             node = Node(symbol)
             productions.pop(0)  # you finished with the current non terminal from the working stack, go to the next one

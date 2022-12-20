@@ -1,0 +1,17 @@
+START {
+    int n;
+    int m;
+    int sum;
+    int current_number;
+
+    sum=0;
+    read(n);
+    read(m);
+
+    for(i=0;i<n;i=i+1;){
+        read(current_number);
+        sum=sum+current_number;
+    }
+
+    write(sum);
+}

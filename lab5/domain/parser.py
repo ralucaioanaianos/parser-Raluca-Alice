@@ -17,6 +17,8 @@ class Parser:
         self.beta = [grammar.getStartingSymbol()]  # input stack, part of the tree to be built
         self.grammar = grammar
         self.w = w.split(' ')  # the word/sequence
+        self.f = open("demofile2.txt", "w")
+
 
     # ------------------------- MOVES -------------------------
     def expand(self):
@@ -27,7 +29,7 @@ class Parser:
         A → γ1 | γ2 | … represents the productions corresponding to A
         1 = first prod of A
         """
-        print("-> expand", end="\n")
+        self.f.write("-> expand\n")
         current_non_terminal = self.beta.pop()
         self.alpha.append(current_non_terminal + " 0")
         productions_of_current_non_terminal = self.grammar.getProductionsFor(current_non_terminal)
@@ -40,7 +42,8 @@ class Parser:
         WHEN: head of input stack is a terminal = current symbol from input
             (q, i, ἄ, aiβ) ⊢ (q, i+1, ἄai, β)
         """
-        print("-> advance", end="\n")
+        self.f.write("-> advance\n")
+        #print("-> advance", end="\n")
         if self.beta[-1] != EPSILON:
             self.i += 1
         self.alpha.append(self.beta.pop())
@@ -50,7 +53,8 @@ class Parser:
         WHEN: head of input stack is a terminal ≠ current symbol from input
             (q, i, ἄ, aiβ) ⊢ (b, i, ἄ, aiβ)
         """
-        print("-> momentary insuccess", end="\n")
+        self.f.write("-> momentary insuccess\n")
+        #print("-> momentary insuccess", end="\n")
         self.state = BACK_STATE
 
     def back(self):
@@ -58,7 +62,8 @@ class Parser:
         WHEN: head of working stack is a terminal
             (b, i, ἄa, β) ⊢ (b, i-1, ἄ, aβ)
         """
-        print("-> back", end="\n")
+        self.f.write("-> back\n")
+        #print("-> back", end="\n")
         self.state = BACK_STATE
         if self.alpha[-1] != EPSILON:
             self.i -= 1
@@ -71,7 +76,8 @@ class Parser:
                              (b, i, ἄ, A β), otherwise with the exception
                              (e, i, ἄ, β), if i=1, A=S, ERROR
         """
-        print("-> another try", end="\n")
+        self.f.write("-> another try\n")
+        #print("-> another try", end="\n")
         current_production = self.alpha.pop()
         non_terminal_and_production_number = current_production.split(" ")
         current_non_terminal = non_terminal_and_production_number[0]
@@ -101,7 +107,8 @@ class Parser:
         (q, n+1, ἄ, Ɛ) ⊢ (f, n+1, ἄ, Ɛ)
         :return:
         """
-        print("-> success", end="\n")
+        self.f.write("-> success\n")
+        #print("-> success", end="\n")
         self.state = FINAL_STATE
         self.beta.append(EPSILON)
 
@@ -121,7 +128,8 @@ class Parser:
 
         while self.state != FINAL_STATE and self.state != ERROR_STATE:
             # maybe print it better
-            print(f'({self.state}, {self.i}, {self.alpha}, {self.beta} )', end="")
+            self.f.write(f'({self.state}, {self.i}, {self.alpha}, {self.beta} )')
+            #print(f'({self.state}, {self.i}, {self.alpha}, {self.beta} )', end="")
             if self.state == NORMAL_STATE:
                 if self.i == len(self.w) and len(self.beta) == 0:
                     self.success()
@@ -146,5 +154,5 @@ class Parser:
         else:
             print("error!")
 
-    def get_output_table(self):
-        return TableOutput(self.alpha, self.grammar)
+    def get_output_table(self, output_file_name):
+        return TableOutput(self.alpha, self.grammar, output_file_name)

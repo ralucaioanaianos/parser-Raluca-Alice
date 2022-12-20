@@ -1,0 +1,24 @@
+START {
+    int ab;
+    int ba;
+    int c;
+    int max;
+
+    read(ab);
+    read(ba);
+    read(c);
+
+    if(a>b&&a>c){
+        max=a;
+    }
+    else{
+        if(b>c&&b>a){
+            max=b;
+        }
+        else{
+            max=c;
+        }
+    }
+
+    write(max);
+}

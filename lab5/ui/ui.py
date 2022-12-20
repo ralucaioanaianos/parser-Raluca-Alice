@@ -20,22 +20,21 @@ class UI:
         # parser = Parser(grammar, "x1 c c s s a")
 
         # ------- g1
-        # with open("seq.txt") as file:
-        #     seq = file.read()
-        #     grammar.readFromFile("g4.txt")
-        #     parser = Parser(grammar, seq)
-        #     parser.descending_recursive_parsing()
-        #     parser_output = parser.get_output_table()
-        #     parser_output.get_output_as_string()
+        with open("seq.txt") as file:
+            seq = file.read()
+            grammar.readFromFile("g4.txt")
+            parser = Parser(grammar, seq)
+            parser.descending_recursive_parsing()
+            parser_output = parser.get_output_table(output_file_name="output1.txt")
+            parser_output.get_output_as_string()
 
         # -------- g2
         with open("pif.out") as pif_file:
             seq = " ".join(list(map(lambda line: line.split(" -> ")[0], pif_file.read().split('\n'))))
-            # print(seq)
             grammar.readFromFile("g2.txt")
             parser = Parser(grammar, seq)
             parser.descending_recursive_parsing()
-            parser_output = parser.get_output_table()
+            parser_output = parser.get_output_table(output_file_name="output2.txt")
             parser_output.get_output_as_string()
         # while True:
 
